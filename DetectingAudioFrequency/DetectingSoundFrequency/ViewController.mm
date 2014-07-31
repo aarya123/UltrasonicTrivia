@@ -95,9 +95,10 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
         Float32 maxHZValue = 0;
         Float32 maxHZ = strongestFrequencyHZ(dataAccumulator, fftConverter, accumulatorDataLenght, &maxHZValue);
         
-        NSLog(@" max HZ = %0.3f ", maxHZ);
+        
         dispatch_async(dispatch_get_main_queue(), ^{ //update UI only on main thread
-            labelToUpdate.text = [NSString stringWithFormat:@"%0.3f HZ",maxHZ];
+//            labelToUpdate.text = [NSString stringWithFormat:@"%0.3f HZ",maxHZ];
+            [ViewController updateLabel:maxHZ];
         });
         
         emptyAccumulator(); //empty the accumulator when finished
@@ -110,7 +111,7 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 @end
 
 @implementation ViewController
-
+static ViewController *instance;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -120,6 +121,7 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     [self.label setText:@"No Frequency"];
     [self.view addSubview:self.label];
     labelToUpdate = self.label;
+    instance=self;
     //initialize stuff
     fftConverter = FFTHelperCreate(accumulatorDataLenght);
     initializeAccumulator();
@@ -144,6 +146,10 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 -(void) dealloc {
     destroyAccumulator();
     FFTHelperRelease(fftConverter);
+}
++(void) updateLabel:(Float32) freq{
+    NSLog(@" max HZ = %0.3f ", freq);
+    [instance.label setText:[NSString stringWithFormat:@"%0.3f HZ",freq]];
 }
 
 @end
