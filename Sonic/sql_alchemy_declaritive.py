@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, Text, Numeric
+from sqlalchemy import Column, ForeignKey, Integer, Text, Numeric, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -12,6 +12,8 @@ class Question(Base):
     id         = Column(Integer, primary_key = True)
     frequency  = Column(Numeric)
     question   = Column(Text, nullable = False)
+    answers    = relationship("Answer")
+    
 
 class Answer(Base):
     __tablename__ = 'answer'
@@ -19,6 +21,7 @@ class Answer(Base):
     question_id = Column(Integer, ForeignKey('question.id'), nullable = False)
     question    = relationship(Question)
     answer      = Column(Text, nullable = False)
+    correct     = Column(Boolean, nullable = False)
 
 engine = create_engine('mysql://hasql-sonic:hedgehog@els.hamysql.prod.hulu.com:3306/sonic')
 
