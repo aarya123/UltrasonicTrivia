@@ -1,19 +1,4 @@
-
-
 #import "ViewController.h"
-
-#import "mo_audio.h" //stuff that helps set up low-level audio
-#import "FFTHelper.h"
-
-
-#define SAMPLE_RATE 44100  //22050 //44100
-#define FRAMESIZE  512
-#define NUMCHANNELS 2
-
-#define kOutputBus 0
-#define kInputBus 1
-
-
 
 /// Nyquist Maximum Frequency
 const Float32 NyquistMaxFreq = SAMPLE_RATE/2.0;
@@ -23,15 +8,10 @@ Float32 frequencyHerzValue(long frequencyIndex, long fftVectorSize, Float32 nyqu
     return ((Float32)frequencyIndex/(Float32)fftVectorSize) * nyquistFrequency;
 }
 
-
-
 // The Main FFT Helper
 FFTHelperRef *fftConverter = NULL;
 
-
-
 //Accumulator Buffer=====================
-
 const UInt32 accumulatorDataLenght = 131072;  //16384; //32768; 65536; 131072;
 UInt32 accumulatorFillIndex = 0;
 Float32 *dataAccumulator = nil;
@@ -65,13 +45,10 @@ static void emptyAccumulator() {
 }
 //=======================================
 
-
 //==========================Window Buffer
 const UInt32 windowLength = accumulatorDataLenght;
 Float32 *windowBuffer= NULL;
 //=======================================
-
-
 
 /// max value from vector with value index (using Accelerate Framework)
 static Float32 vectorMaxValueACC32_index(Float32 *vector, unsigned long size, long step, unsigned long *outIndex) {
@@ -79,9 +56,6 @@ static Float32 vectorMaxValueACC32_index(Float32 *vector, unsigned long size, lo
     vDSP_maxvi(vector, step, &maxVal, outIndex, size);
     return maxVal;
 }
-
-
-
 
 ///returns HZ of the strongest frequency.
 static Float32 strongestFrequencyHZ(Float32 *buffer, FFTHelperRef *fftHelper, UInt32 frameSize, Float32 *freqValue) {
@@ -96,11 +70,7 @@ static Float32 strongestFrequencyHZ(Float32 *buffer, FFTHelperRef *fftHelper, UI
     return HZ;
 }
 
-
-
 __weak UILabel *labelToUpdate = nil;
-
-
 
 #pragma mark MAIN CALLBACK
 void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
@@ -135,20 +105,8 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     memset(buffer, 0, sizeof(Float32)*frameSize*NUMCHANNELS);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 @interface ViewController ()
-
+@property (nonatomic, strong) UILabel *label;
 @end
 
 @implementation ViewController
@@ -156,9 +114,12 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    labelToUpdate = HZValueLabel;
-    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    self.label=[[UILabel alloc]initWithFrame:CGRectMake(0,0, screenRect.size.width, screenRect.size.height/8)];
+    [self.label setTextAlignment:NSTextAlignmentCenter];
+    [self.label setText:@"No Frequency"];
+    [self.view addSubview:self.label];
+    labelToUpdate = self.label;
     //initialize stuff
     fftConverter = FFTHelperCreate(accumulatorDataLenght);
     initializeAccumulator();
@@ -173,9 +134,6 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     result = MoAudio::start( AudioCallback, NULL );
     if (!result) { NSLog(@" MoAudio start ERROR"); }
 }
-
-
-
 
 - (void)didReceiveMemoryWarning
 {
