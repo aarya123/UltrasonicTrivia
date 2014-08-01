@@ -135,9 +135,8 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     [self.view addSubview:self.questionLabel];
     
     self.choiceButtons=[[UITableView alloc]initWithFrame:CGRectMake(0, self.questionLabel.frame.origin.y+self.questionLabel.frame.size.height, screenRect.size.width, screenRect.size.height-screenRect.size.height/4) style:UITableViewStylePlain];
-    self.choiceController=[[ChoiceController alloc]init];
-    self.choiceButtons.delegate=self.choiceController;
-    self.choiceButtons.dataSource=self.choiceController;
+    [self.choiceButtons setAllowsSelection:NO];
+    self.choiceController=[[ChoiceController alloc]init:self.questionLabel tableView:self.choiceButtons];
     [self.view addSubview:self.choiceButtons];
     
     labelToUpdate = self.freqLabel;
@@ -176,7 +175,7 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
         [self.questionLabel setText:[self.currQuestion valueForKey:@"question"]];
         [self.questionLabel setBackgroundColor:[UIColor whiteColor]];
         [self.questionLabel setHidden:NO];
-        [self.choiceController setDataSource:[self.currQuestion objectForKey:@"choices"] tableView:self.choiceButtons];
+        [self.choiceController setDataSource:self.currQuestion];
     }
     else{
         NSLog(@"Found no question");
@@ -184,15 +183,6 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     }
 }
 
--(void) choiceButtonPressed:(id) sender{
-    NSInteger choice=((UIControl *)sender).tag;
-    if(choice==[[self.currQuestion objectForKey:@"answer"]intValue]){
-        [self.questionLabel setBackgroundColor:[UIColor greenColor]];
-    }
-    else{
-        [self.questionLabel setBackgroundColor:[UIColor redColor]];
-    }
-}
 -(void) getQuestion:(Float32)freq{
     //    NSString *requestUrl=[NSString stringWithFormat:url,freq];
     //    NSLog(@"Request URL: %@",[NSURL URLWithString:requestUrl]);

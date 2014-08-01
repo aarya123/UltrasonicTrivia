@@ -10,5 +10,6 @@
 #import "ViewController.h"
 #import "ChoiceCell.h"
 @interface ChoiceController : NSObject<UITableViewDelegate, UITableViewDataSource>
--(void)setDataSource:(NSArray*)newSource tableView:(UITableView*)tableView;
+- (id)init:(UILabel*)questionLabel tableView:(UITableView*)tableView;
+-(void)setDataSource:(NSDictionary*)newSource;
 @end
