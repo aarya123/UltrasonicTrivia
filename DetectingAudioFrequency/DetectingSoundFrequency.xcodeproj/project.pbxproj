@@ -27,6 +27,7 @@
 		04808C6218C009F500E685F1 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04808C6118C009F500E685F1 /* OpenGLES.framework */; };
 		04808C6818C00D8200E685F1 /* mo_audio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 04808C6518C00D8200E685F1 /* mo_audio.mm */; };
 		04808C6918C00D8200E685F1 /* mo_gfx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 04808C6718C00D8200E685F1 /* mo_gfx.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3EC4BE21198B134F0023CB41 /* SignUpController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3EC4BE20198B134F0023CB41 /* SignUpController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,8 @@
 		04808C6518C00D8200E685F1 /* mo_audio.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = mo_audio.mm; sourceTree = "<group>"; };
 		04808C6618C00D8200E685F1 /* mo_gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mo_gfx.h; sourceTree = "<group>"; };
 		04808C6718C00D8200E685F1 /* mo_gfx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = mo_gfx.mm; sourceTree = "<group>"; };
+		3EC4BE1F198B134F0023CB41 /* SignUpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpController.h; sourceTree = "<group>"; };
+		3EC4BE20198B134F0023CB41 /* SignUpController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SignUpController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +148,8 @@
 				04808C4F18BE88E800E685F1 /* FFTHelper.mm */,
 				04808C3118BE868300E685F1 /* Images.xcassets */,
 				04808C2018BE868300E685F1 /* Supporting Files */,
+				3EC4BE1F198B134F0023CB41 /* SignUpController.h */,
+				3EC4BE20198B134F0023CB41 /* SignUpController.mm */,
 			);
 			path = DetectingSoundFrequency;
 			sourceTree = "<group>";
@@ -286,6 +291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EC4BE21198B134F0023CB41 /* SignUpController.mm in Sources */,
 				04808C5018BE88E800E685F1 /* FFTHelper.mm in Sources */,
 				04808C3018BE868300E685F1 /* ViewController.mm in Sources */,
 				04808C2A18BE868300E685F1 /* AppDelegate.mm in Sources */,

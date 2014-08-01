@@ -8,16 +8,18 @@
 {
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    // Override point for customization after application launch.
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"user"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    /* create an instance of our view controller
-     then set it as the window’s root view controller
-     */
-    ViewController *viewController = [[ViewController alloc] init];
-    
-    self.window.rootViewController = viewController;
-    
+    if([[NSUserDefaults standardUserDefaults] stringForKey:@"user"] != nil){
+        ViewController *viewController = [[ViewController alloc] init];
+        self.window.rootViewController = viewController;
+    }
+    else{
+        SignUpController *viewController = [[SignUpController alloc] init];
+        self.window.rootViewController = viewController;
+    }
     [self.window makeKeyAndVisible];
     return YES;
 }

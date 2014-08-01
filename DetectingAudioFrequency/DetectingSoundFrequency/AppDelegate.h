@@ -9,6 +9,7 @@ http://stackoverflow.com/questions/11686625/get-hz-frequency-from-audio-stream-o
 
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
+#import "SignUpController.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

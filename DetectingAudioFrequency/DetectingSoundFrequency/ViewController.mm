@@ -206,7 +206,6 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     else{
         NSLog(@"Incorrect");
     }
-    
 }
 -(void) getQuestion:(Float32)freq{
     //    NSString *requestUrl=[NSString stringWithFormat:url,freq];
