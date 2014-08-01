@@ -1,11 +1,4 @@
-
-
-#include <stdio.h>
-
-
 #import "FFTHelper.h"
-
-
 FFTHelperRef * FFTHelperCreate(long numberOfSamples) {
 
     FFTHelperRef *helperRef = (FFTHelperRef*) malloc(sizeof(FFTHelperRef));

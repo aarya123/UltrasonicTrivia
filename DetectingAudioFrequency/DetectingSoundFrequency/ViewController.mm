@@ -12,11 +12,11 @@ Float32 frequencyHerzValue(long frequencyIndex, long fftVectorSize, Float32 nyqu
 FFTHelperRef *fftConverter = NULL;
 
 //Accumulator Buffer=====================
-const UInt32 accumulatorDataLenght = 131072;  //16384; //32768; 65536; 131072;
+const UInt32 accumulatorDataLength = 131072;  //16384; //32768; 65536; 131072;
 UInt32 accumulatorFillIndex = 0;
 Float32 *dataAccumulator = nil;
 static void initializeAccumulator() {
-    dataAccumulator = (Float32*) malloc(sizeof(Float32)*accumulatorDataLenght);
+    dataAccumulator = (Float32*) malloc(sizeof(Float32)*accumulatorDataLength);
     accumulatorFillIndex = 0;
 }
 static void destroyAccumulator() {
@@ -31,22 +31,22 @@ static BOOL accumulateFrames(Float32 *frames, UInt32 lenght) { //returned YES if
     //    float zero = 0.0;
     //    vDSP_vsmul(frames, 1, &zero, frames, 1, lenght);
     
-    if (accumulatorFillIndex>=accumulatorDataLenght) { return YES; } else {
+    if (accumulatorFillIndex>=accumulatorDataLength) { return YES; } else {
         memmove(dataAccumulator+accumulatorFillIndex, frames, sizeof(Float32)*lenght);
         accumulatorFillIndex = accumulatorFillIndex+lenght;
-        if (accumulatorFillIndex>=accumulatorDataLenght) { return YES; }
+        if (accumulatorFillIndex>=accumulatorDataLength) { return YES; }
     }
     return NO;
 }
 
 static void emptyAccumulator() {
     accumulatorFillIndex = 0;
-    memset(dataAccumulator, 0, sizeof(Float32)*accumulatorDataLenght);
+    memset(dataAccumulator, 0, sizeof(Float32)*accumulatorDataLength);
 }
 //=======================================
 
 //==========================Window Buffer
-const UInt32 windowLength = accumulatorDataLenght;
+const UInt32 windowLength = accumulatorDataLength;
 Float32 *windowBuffer= NULL;
 //=======================================
 
@@ -88,17 +88,16 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
         //windowing the time domain data before FFT (using Blackman Window)
         if (windowBuffer==NULL) { windowBuffer = (Float32*) malloc(sizeof(Float32)*windowLength); }
         vDSP_blkman_window(windowBuffer, windowLength, 0);
-        vDSP_vmul(dataAccumulator, 1, windowBuffer, 1, dataAccumulator, 1, accumulatorDataLenght);
+        vDSP_vmul(dataAccumulator, 1, windowBuffer, 1, dataAccumulator, 1, accumulatorDataLength);
         //=========================================
         
         
         Float32 maxHZValue = 0;
-        Float32 maxHZ = strongestFrequencyHZ(dataAccumulator, fftConverter, accumulatorDataLenght, &maxHZValue);
+        Float32 maxHZ = strongestFrequencyHZ(dataAccumulator, fftConverter, accumulatorDataLength, &maxHZValue);
         
         
         dispatch_async(dispatch_get_main_queue(), ^{ //update UI only on main thread
-//            labelToUpdate.text = [NSString stringWithFormat:@"%0.3f HZ",maxHZ];
-            [ViewController updateLabel:maxHZ];
+            [ViewController staticHandleNewFreq:maxHZ];
         });
         
         emptyAccumulator(); //empty the accumulator when finished
@@ -107,26 +106,48 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 }
 
 @interface ViewController ()
-@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UILabel *freqLabel;
+@property (nonatomic, strong) UILabel *questionLabel;
+@property (nonatomic, strong) UIView *choiceGroup;
+@property (nonatomic,strong)NSDictionary* currQuestion;
 @end
 
 @implementation ViewController
 static ViewController *instance;
+
+
+NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    self.label=[[UILabel alloc]initWithFrame:CGRectMake(0,0, screenRect.size.width, screenRect.size.height/8)];
-    [self.label setTextAlignment:NSTextAlignmentCenter];
-    [self.label setText:@"No Frequency"];
-    [self.view addSubview:self.label];
-    labelToUpdate = self.label;
+    
+    self.freqLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0, screenRect.size.width, screenRect.size.height/8)];
+    [self.freqLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.freqLabel setText:@"No Frequency"];
+    [self.view addSubview:self.freqLabel];
+    
+    self.questionLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,self.freqLabel.frame.size.height, screenRect.size.width, screenRect.size.height/8)];
+    [self.questionLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.questionLabel setText:@"No question"];
+    [self.questionLabel setHidden:YES];
+    [self.view addSubview:self.questionLabel];
+    
+    self.choiceGroup=[[UIView alloc] initWithFrame:CGRectMake(0, self.questionLabel.frame.origin.y+self.questionLabel.frame.size.height, screenRect.size.width, screenRect.size.height-screenRect.size.height/4)];
+    [self.choiceGroup setHidden:YES];
+    [self.view addSubview:self.choiceGroup];
+    
+    
+    
+    
+    
+    
+    labelToUpdate = self.freqLabel;
     instance=self;
     //initialize stuff
-    fftConverter = FFTHelperCreate(accumulatorDataLenght);
+    fftConverter = FFTHelperCreate(accumulatorDataLength);
     initializeAccumulator();
     [self initMomuAudio];
-
 }
 
 -(void) initMomuAudio {
@@ -147,9 +168,68 @@ static ViewController *instance;
     destroyAccumulator();
     FFTHelperRelease(fftConverter);
 }
-+(void) updateLabel:(Float32) freq{
-    NSLog(@" max HZ = %0.3f ", freq);
-    [instance.label setText:[NSString stringWithFormat:@"%0.3f HZ",freq]];
+-(void) handleQuestion:(NSData*) questionInfo{
+    NSError *localError = nil;
+    questionInfo = [@"{\"answer\": 0,\"choices\": [\"Caught in a landslide\",\"With no escape from reality\"],\"question\": \"Is this the real life? is this just fantasy?\"}" dataUsingEncoding:NSUTF8StringEncoding];
+    self.currQuestion = [NSJSONSerialization JSONObjectWithData:questionInfo options:NSJSONReadingMutableContainers error:&localError];
+    NSLog(@"%@",    self.currQuestion);
+    if([self.currQuestion objectForKey:@"error"]==nil)
+    {
+        [[self.choiceGroup subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self.questionLabel setText:[self.currQuestion valueForKey:@"question"]];
+        [self.questionLabel setHidden:NO];
+        [self.choiceGroup setHidden:NO];
+        NSArray *choices=[self.currQuestion objectForKey:@"choices"];
+        CGRect viewRect = self.choiceGroup.frame;
+        double height=viewRect.size.height/[choices count];
+        for(int i=0;i<[choices count];i++){
+            UIButton *choiceButton=[UIButton buttonWithType:UIButtonTypeRoundedRect];
+            choiceButton.frame=CGRectMake(0, height*i, viewRect.size.width, height);
+            [choiceButton setTitle:choices[i] forState:UIControlStateNormal];
+            [choiceButton addTarget:self action:@selector(choiceButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            choiceButton.tag=i;
+            [self.choiceGroup addSubview:choiceButton];
+        }
+    }
+    else{
+        NSLog(@"Found no question");
+        [self.questionLabel setHidden:YES];
+        [self.choiceGroup setHidden:YES];
+    }
+}
+
+-(void) choiceButtonPressed:(id) sender{
+    NSInteger choice=((UIControl *)sender).tag;
+    if(choice==[[self.currQuestion objectForKey:@"answer"]intValue]){
+        NSLog(@"Correct");
+    }
+    else{
+        NSLog(@"Incorrect");
+    }
+    
+}
+-(void) getQuestion:(Float32)freq{
+    //    NSString *requestUrl=[NSString stringWithFormat:url,freq];
+    //    NSLog(@"Request URL: %@",[NSURL URLWithString:requestUrl]);
+    //    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requestUrl]];
+    //    [request setHTTPMethod: @"GET"];
+    //    NSError *requestError;
+    //    NSURLResponse *urlResponse = nil;
+    //    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    //    if(responseData!=nil)
+    //        [self handleQuestion:responseData];
+    [self handleQuestion:nil];
+}
+double lastCheck=0;
+-(void) instanceHandleNewFreq:(Float32) freq{
+    [self.freqLabel setText:[NSString stringWithFormat:@"%0.3f HZ",freq]];
+    if([[NSDate date] timeIntervalSince1970]-lastCheck>20){
+        lastCheck=[[NSDate date] timeIntervalSince1970];
+        [self getQuestion:freq];
+    }
+}
++(void) staticHandleNewFreq:(Float32) freq{
+    [instance instanceHandleNewFreq:freq];
 }
 
 @end
