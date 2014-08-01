@@ -28,6 +28,8 @@
 		04808C6818C00D8200E685F1 /* mo_audio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 04808C6518C00D8200E685F1 /* mo_audio.mm */; };
 		04808C6918C00D8200E685F1 /* mo_gfx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 04808C6718C00D8200E685F1 /* mo_gfx.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3EC4BE21198B134F0023CB41 /* SignUpController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3EC4BE20198B134F0023CB41 /* SignUpController.mm */; };
+		3ECFCF11198C13260084A692 /* ChoiceCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ECFCF10198C13260084A692 /* ChoiceCell.mm */; };
+		3ECFCF14198C15550084A692 /* ChoiceController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ECFCF13198C15550084A692 /* ChoiceController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +74,10 @@
 		04808C6718C00D8200E685F1 /* mo_gfx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = mo_gfx.mm; sourceTree = "<group>"; };
 		3EC4BE1F198B134F0023CB41 /* SignUpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpController.h; sourceTree = "<group>"; };
 		3EC4BE20198B134F0023CB41 /* SignUpController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SignUpController.mm; sourceTree = "<group>"; };
+		3ECFCF0F198C13260084A692 /* ChoiceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoiceCell.h; sourceTree = "<group>"; };
+		3ECFCF10198C13260084A692 /* ChoiceCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ChoiceCell.mm; sourceTree = "<group>"; };
+		3ECFCF12198C15550084A692 /* ChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoiceController.h; sourceTree = "<group>"; };
+		3ECFCF13198C15550084A692 /* ChoiceController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ChoiceController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +156,10 @@
 				04808C2018BE868300E685F1 /* Supporting Files */,
 				3EC4BE1F198B134F0023CB41 /* SignUpController.h */,
 				3EC4BE20198B134F0023CB41 /* SignUpController.mm */,
+				3ECFCF0F198C13260084A692 /* ChoiceCell.h */,
+				3ECFCF10198C13260084A692 /* ChoiceCell.mm */,
+				3ECFCF12198C15550084A692 /* ChoiceController.h */,
+				3ECFCF13198C15550084A692 /* ChoiceController.mm */,
 			);
 			path = DetectingSoundFrequency;
 			sourceTree = "<group>";
@@ -293,9 +303,11 @@
 			files = (
 				3EC4BE21198B134F0023CB41 /* SignUpController.mm in Sources */,
 				04808C5018BE88E800E685F1 /* FFTHelper.mm in Sources */,
+				3ECFCF11198C13260084A692 /* ChoiceCell.mm in Sources */,
 				04808C3018BE868300E685F1 /* ViewController.mm in Sources */,
 				04808C2A18BE868300E685F1 /* AppDelegate.mm in Sources */,
 				04808C6818C00D8200E685F1 /* mo_audio.mm in Sources */,
+				3ECFCF14198C15550084A692 /* ChoiceController.mm in Sources */,
 				04808C2618BE868300E685F1 /* main.mm in Sources */,
 				04808C6918C00D8200E685F1 /* mo_gfx.mm in Sources */,
 			);

@@ -106,10 +106,11 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 }
 
 @interface ViewController ()
-@property (nonatomic, strong) UILabel *freqLabel;
-@property (nonatomic, strong) UILabel *questionLabel;
-@property (nonatomic, strong) UIView *choiceGroup;
+@property (nonatomic, strong) UILabel* freqLabel;
+@property (nonatomic, strong) UILabel* questionLabel;
+@property (nonatomic, strong) UITableView* choiceButtons;
 @property (nonatomic,strong)NSDictionary* currQuestion;
+@property (nonatomic,strong)ChoiceController* choiceController;
 @end
 
 @implementation ViewController
@@ -133,14 +134,11 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     [self.questionLabel setHidden:YES];
     [self.view addSubview:self.questionLabel];
     
-    self.choiceGroup=[[UIView alloc] initWithFrame:CGRectMake(0, self.questionLabel.frame.origin.y+self.questionLabel.frame.size.height, screenRect.size.width, screenRect.size.height-screenRect.size.height/4)];
-    [self.choiceGroup setHidden:YES];
-    [self.view addSubview:self.choiceGroup];
-    
-    
-    
-    
-    
+    self.choiceButtons=[[UITableView alloc]initWithFrame:CGRectMake(0, self.questionLabel.frame.origin.y+self.questionLabel.frame.size.height, screenRect.size.width, screenRect.size.height-screenRect.size.height/4) style:UITableViewStylePlain];
+    self.choiceController=[[ChoiceController alloc]init];
+    self.choiceButtons.delegate=self.choiceController;
+    self.choiceButtons.dataSource=self.choiceController;
+    [self.view addSubview:self.choiceButtons];
     
     labelToUpdate = self.freqLabel;
     instance=self;
@@ -175,27 +173,14 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     NSLog(@"%@",    self.currQuestion);
     if([self.currQuestion objectForKey:@"error"]==nil)
     {
-        [[self.choiceGroup subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self.questionLabel setText:[self.currQuestion valueForKey:@"question"]];
         [self.questionLabel setBackgroundColor:[UIColor whiteColor]];
         [self.questionLabel setHidden:NO];
-        [self.choiceGroup setHidden:NO];
-        NSArray *choices=[self.currQuestion objectForKey:@"choices"];
-        CGRect viewRect = self.choiceGroup.frame;
-        double height=viewRect.size.height/[choices count];
-        for(int i=0;i<[choices count];i++){
-            UIButton *choiceButton=[UIButton buttonWithType:UIButtonTypeRoundedRect];
-            choiceButton.frame=CGRectMake(0, height*i, viewRect.size.width, height);
-            [choiceButton setTitle:choices[i] forState:UIControlStateNormal];
-            [choiceButton addTarget:self action:@selector(choiceButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            choiceButton.tag=i;
-            [self.choiceGroup addSubview:choiceButton];
-        }
+        [self.choiceController setDataSource:[self.currQuestion objectForKey:@"choices"] tableView:self.choiceButtons];
     }
     else{
         NSLog(@"Found no question");
         [self.questionLabel setHidden:YES];
-        [self.choiceGroup setHidden:YES];
     }
 }
 
@@ -203,17 +188,9 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     NSInteger choice=((UIControl *)sender).tag;
     if(choice==[[self.currQuestion objectForKey:@"answer"]intValue]){
         [self.questionLabel setBackgroundColor:[UIColor greenColor]];
-        NSArray *choiceButtons=[self.choiceGroup subviews];
-        for(int i=0;i<[choiceButtons count];i++){
-            [(UIButton*)choiceButtons[i] setEnabled:NO];
-        }
     }
     else{
         [self.questionLabel setBackgroundColor:[UIColor redColor]];
-        NSArray *choiceButtons=[self.choiceGroup subviews];
-        for(int i=0;i<[choiceButtons count];i++){
-            [(UIButton*)choiceButtons[i] setEnabled:NO];
-        }
     }
 }
 -(void) getQuestion:(Float32)freq{
