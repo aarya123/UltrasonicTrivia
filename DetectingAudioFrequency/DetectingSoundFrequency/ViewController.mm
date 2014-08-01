@@ -177,6 +177,7 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     {
         [[self.choiceGroup subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self.questionLabel setText:[self.currQuestion valueForKey:@"question"]];
+        [self.questionLabel setBackgroundColor:[UIColor whiteColor]];
         [self.questionLabel setHidden:NO];
         [self.choiceGroup setHidden:NO];
         NSArray *choices=[self.currQuestion objectForKey:@"choices"];
@@ -201,10 +202,18 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
 -(void) choiceButtonPressed:(id) sender{
     NSInteger choice=((UIControl *)sender).tag;
     if(choice==[[self.currQuestion objectForKey:@"answer"]intValue]){
-        NSLog(@"Correct");
+        [self.questionLabel setBackgroundColor:[UIColor greenColor]];
+        NSArray *choiceButtons=[self.choiceGroup subviews];
+        for(int i=0;i<[choiceButtons count];i++){
+            [(UIButton*)choiceButtons[i] setEnabled:NO];
+        }
     }
     else{
-        NSLog(@"Incorrect");
+        [self.questionLabel setBackgroundColor:[UIColor redColor]];
+        NSArray *choiceButtons=[self.choiceGroup subviews];
+        for(int i=0;i<[choiceButtons count];i++){
+            [(UIButton*)choiceButtons[i] setEnabled:NO];
+        }
     }
 }
 -(void) getQuestion:(Float32)freq{
