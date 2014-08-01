@@ -173,7 +173,6 @@ static ViewController *instance;
 }
 -(void) handleQuestion:(NSData*) questionInfo{
     NSError *localError = nil;
-    questionInfo = [@"{\"answer\": 2,\"choices\": [ \"40\",\"41\",\"42\",\"43\"],\"question\": \"What is the answer to the Ultimate Question of Life, the Universe, and Everything?\",\"show\": \"South_Park\"}" dataUsingEncoding:NSUTF8StringEncoding];
     self.currQuestion = [NSJSONSerialization JSONObjectWithData:questionInfo options:NSJSONReadingMutableContainers error:&localError];
     NSLog(@"%@",    self.currQuestion);
     if([self.currQuestion objectForKey:@"error"]==nil)
@@ -205,16 +204,7 @@ static ViewController *instance;
     [self.scoreLabel setHidden:NO];
 }
 -(void) getQuestion:(Float32)freq{
-    //    NSString *requestUrl=[NSString stringWithFormat:url,freq];
-    //    NSLog(@"Request URL: %@",[NSURL URLWithString:requestUrl]);
-    //    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requestUrl]];
-    //    [request setHTTPMethod: @"GET"];
-    //    NSError *requestError;
-    //    NSURLResponse *urlResponse = nil;
-    //    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
-    //    if(responseData!=nil)
-    //        [self handleQuestion:responseData];
-    [self handleQuestion:nil];
+    [self handleQuestion:[Server getQuestion:freq]];
 }
 double lastCheck=0;
 -(void) instanceHandleNewFreq:(Float32) freq{
