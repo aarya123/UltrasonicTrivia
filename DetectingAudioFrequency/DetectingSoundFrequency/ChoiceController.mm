@@ -7,23 +7,21 @@
 //
 
 #import "ChoiceController.h"
-
+#import "ViewController.h"
 @interface ChoiceController ()
 @property (nonatomic,strong)NSDictionary* question;
-@property(nonatomic,strong)UILabel* questionLabel;
-@property(nonatomic,strong)UITableView* tableView;
+@property(nonatomic,strong)ViewController* viewController;
 @property(nonatomic)BOOL answered;
 @end
 
 @implementation ChoiceController
-- (id)init:(UILabel*)questionLabel tableView:(UITableView *)tableView{
+- (id)init:(ViewController*)viewController{
     self = [super init];
     if (self)
     {
-        self.questionLabel=questionLabel;
-        self.tableView=tableView;
-        self.tableView.delegate=self;
-        self.tableView.dataSource=self;
+        self.viewController=viewController;
+        self.viewController.choiceButtons.delegate=self;
+        self.viewController.choiceButtons.dataSource=self;
     }
     return self;
 }
@@ -54,13 +52,13 @@
 -(void) btnPressed:(id) sender{
     int tag=((UIButton*)sender).tag;
     if(tag==[self getAnswerIndex]){
-        [self.questionLabel setBackgroundColor:[UIColor greenColor]];
+        [self.viewController handleCorrectAnswer];
     }
     else{
-        [self.questionLabel setBackgroundColor:[UIColor redColor]];
+        [self.viewController handleIncorrectAnswer];
     }
     self.answered=YES;
-    [self.tableView reloadData];
+    [self reloadData];
 }
 -(NSString*)getItemAtIndex:(NSIndexPath*)indexPath{
     return [self getChoices][[indexPath row]];
@@ -68,12 +66,15 @@
 -(void)setDataSource:(NSDictionary*)newSource{
     self.question=newSource;
     self.answered=NO;
-    [self.tableView reloadData];
+    [self reloadData];
 }
 -(NSArray*)getChoices{
     return [self.question objectForKey:@"choices"];
 }
 -(int)getAnswerIndex{
     return [[self.question objectForKey:@"answer"] intValue];
+}
+-(void)reloadData{
+    [self.viewController.choiceButtons reloadData];
 }
 @end

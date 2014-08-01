@@ -108,16 +108,16 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 @interface ViewController ()
 @property (nonatomic, strong) UILabel* freqLabel;
 @property (nonatomic, strong) UILabel* questionLabel;
-@property (nonatomic, strong) UITableView* choiceButtons;
+@property (nonatomic, strong) UILabel* scoreLabel;
 @property (nonatomic,strong)NSDictionary* currQuestion;
 @property (nonatomic,strong)ChoiceController* choiceController;
+@property(nonatomic)int score;
 @end
 
 @implementation ViewController
 static ViewController *instance;
 
 
-NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -136,8 +136,14 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
     
     self.choiceButtons=[[UITableView alloc]initWithFrame:CGRectMake(0, self.questionLabel.frame.origin.y+self.questionLabel.frame.size.height, screenRect.size.width, screenRect.size.height-screenRect.size.height/4) style:UITableViewStylePlain];
     [self.choiceButtons setAllowsSelection:NO];
-    self.choiceController=[[ChoiceController alloc]init:self.questionLabel tableView:self.choiceButtons];
+    self.choiceController=[[ChoiceController alloc]init:self];
     [self.view addSubview:self.choiceButtons];
+    
+    self.scoreLabel=[[UILabel alloc]initWithFrame:self.choiceButtons.frame];
+    [self.scoreLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.scoreLabel setText:@"0"];
+    [self.scoreLabel setHidden:YES];
+    [self.view addSubview:self.scoreLabel];
     
     labelToUpdate = self.freqLabel;
     instance=self;
@@ -167,7 +173,7 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
 }
 -(void) handleQuestion:(NSData*) questionInfo{
     NSError *localError = nil;
-    questionInfo = [@"{\"answer\": 0,\"choices\": [\"Caught in a landslide\",\"With no escape from reality\"],\"question\": \"Is this the real life? is this just fantasy?\"}" dataUsingEncoding:NSUTF8StringEncoding];
+    questionInfo = [@"{\"answer\": 2,\"choices\": [ \"40\",\"41\",\"42\",\"43\"],\"question\": \"What is the answer to the Ultimate Question of Life, the Universe, and Everything?\",\"show\": \"South_Park\"}" dataUsingEncoding:NSUTF8StringEncoding];
     self.currQuestion = [NSJSONSerialization JSONObjectWithData:questionInfo options:NSJSONReadingMutableContainers error:&localError];
     NSLog(@"%@",    self.currQuestion);
     if([self.currQuestion objectForKey:@"error"]==nil)
@@ -176,13 +182,28 @@ NSString * const url=@"http://0.0.0.0:5000/question/%0.3f";
         [self.questionLabel setBackgroundColor:[UIColor whiteColor]];
         [self.questionLabel setHidden:NO];
         [self.choiceController setDataSource:self.currQuestion];
+        [self.choiceButtons setHidden:NO];
+        [self.scoreLabel setHidden:YES];
     }
     else{
         NSLog(@"Found no question");
         [self.questionLabel setHidden:YES];
+        [self.choiceButtons setHidden:YES];
+        [self.scoreLabel setHidden:NO];
     }
 }
-
+-(void) handleCorrectAnswer{
+    [self.questionLabel setBackgroundColor:[UIColor greenColor]];
+    self.score=[Server submitCorrectAnswer:[self.currQuestion valueForKey:@"show"]];
+    [self.choiceButtons setHidden:YES];
+    [self.scoreLabel setHidden:NO];
+    [self.scoreLabel setText:[NSString stringWithFormat:@"%d",self.score]];
+}
+-(void) handleIncorrectAnswer{
+    [self.questionLabel setBackgroundColor:[UIColor redColor]];
+    [self.choiceButtons setHidden:YES];
+    [self.scoreLabel setHidden:NO];
+}
 -(void) getQuestion:(Float32)freq{
     //    NSString *requestUrl=[NSString stringWithFormat:url,freq];
     //    NSLog(@"Request URL: %@",[NSURL URLWithString:requestUrl]);

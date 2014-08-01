@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ViewController.h"
+@class ViewController;
 #import "ChoiceCell.h"
 @interface ChoiceController : NSObject<UITableViewDelegate, UITableViewDataSource>
-- (id)init:(UILabel*)questionLabel tableView:(UITableView*)tableView;
+- (id)init:(ViewController*)viewController;
 -(void)setDataSource:(NSDictionary*)newSource;
 @end
