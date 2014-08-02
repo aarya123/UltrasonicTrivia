@@ -15,7 +15,10 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.btn=[UIButton buttonWithType:UIButtonTypeRoundedRect];
-        self.btn.frame=self.frame;
+        [self.btn setFrame:self.frame];
+        [self.btn setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+        [self.btn.titleLabel setAdjustsFontSizeToFitWidth:YES];
+        [self.btn setTitleColor:AppConstants.blackFont forState:UIControlStateNormal];
         [self addSubview:self.btn];
     }
     return self;

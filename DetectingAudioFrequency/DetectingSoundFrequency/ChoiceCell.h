@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "AppConstants.h"
 @interface ChoiceCell : UITableViewCell
 @property(strong,nonatomic)UIButton *btn;
 @end

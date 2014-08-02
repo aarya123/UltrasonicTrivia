@@ -116,8 +116,6 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 
 @implementation ViewController
 static ViewController *instance;
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -126,23 +124,31 @@ static ViewController *instance;
     self.freqLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0, screenRect.size.width, screenRect.size.height/8)];
     [self.freqLabel setTextAlignment:NSTextAlignmentCenter];
     [self.freqLabel setText:@"No Frequency"];
+    [self.freqLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+    [self.freqLabel setTextColor:AppConstants.blackFont];
     [self.view addSubview:self.freqLabel];
     
     self.questionLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,self.freqLabel.frame.size.height, screenRect.size.width, screenRect.size.height/8)];
     [self.questionLabel setTextAlignment:NSTextAlignmentCenter];
     [self.questionLabel setText:@"No question"];
     [self.questionLabel setHidden:YES];
+    [self.questionLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+    [self.questionLabel setAdjustsFontSizeToFitWidth:YES];
+    [self.questionLabel setTextColor:AppConstants.blackFont];
     [self.view addSubview:self.questionLabel];
     
     self.choiceButtons=[[UITableView alloc]initWithFrame:CGRectMake(0, self.questionLabel.frame.origin.y+self.questionLabel.frame.size.height, screenRect.size.width, screenRect.size.height-screenRect.size.height/4) style:UITableViewStylePlain];
     [self.choiceButtons setAllowsSelection:NO];
     self.choiceController=[[ChoiceController alloc]init:self];
+    [self.choiceButtons setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
     [self.view addSubview:self.choiceButtons];
     
     self.scoreLabel=[[UILabel alloc]initWithFrame:self.choiceButtons.frame];
     [self.scoreLabel setTextAlignment:NSTextAlignmentCenter];
     [self.scoreLabel setText:@"0"];
     [self.scoreLabel setHidden:YES];
+    [self.scoreLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+    [self.scoreLabel setTextColor:AppConstants.blackFont];
     [self.view addSubview:self.scoreLabel];
     
     labelToUpdate = self.freqLabel;
@@ -173,12 +179,14 @@ static ViewController *instance;
 }
 -(void) handleQuestion:(NSData*) questionInfo{
     NSError *localError = nil;
+    questionInfo = [@"{\"answer\": 2,\"choices\": [ \"40\",\"41\",\"42\",\"43\"],\"question\": \"What is the answer to the Ultimate Question of Life, the Universe, and Everything?\",\"show\": \"South_Park\"}" dataUsingEncoding:NSUTF8StringEncoding];
+
     self.currQuestion = [NSJSONSerialization JSONObjectWithData:questionInfo options:NSJSONReadingMutableContainers error:&localError];
-    NSLog(@"%@",    self.currQuestion);
+    NSLog(@"%@", self.currQuestion);
     if([self.currQuestion objectForKey:@"error"]==nil)
     {
         [self.questionLabel setText:[self.currQuestion valueForKey:@"question"]];
-        [self.questionLabel setBackgroundColor:[UIColor whiteColor]];
+        [self.questionLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
         [self.questionLabel setHidden:NO];
         [self.choiceController setDataSource:self.currQuestion];
         [self.choiceButtons setHidden:NO];
@@ -192,16 +200,18 @@ static ViewController *instance;
     }
 }
 -(void) handleCorrectAnswer{
-    [self.questionLabel setBackgroundColor:[UIColor greenColor]];
+    [self.questionLabel setBackgroundColor:AppConstants.green];
     self.score=[Server submitCorrectAnswer:[self.currQuestion valueForKey:@"show"]];
     [self.choiceButtons setHidden:YES];
     [self.scoreLabel setHidden:NO];
     [self.scoreLabel setText:[NSString stringWithFormat:@"%d",self.score]];
+    [self.scoreLabel setBackgroundColor:AppConstants.green];
 }
 -(void) handleIncorrectAnswer{
-    [self.questionLabel setBackgroundColor:[UIColor redColor]];
+    [self.questionLabel setBackgroundColor:AppConstants.red];
     [self.choiceButtons setHidden:YES];
     [self.scoreLabel setHidden:NO];
+    [self.scoreLabel setBackgroundColor:AppConstants.red];
 }
 -(void) getQuestion:(Float32)freq{
     [self handleQuestion:[Server getQuestion:freq]];
@@ -217,5 +227,4 @@ double lastCheck=0;
 +(void) staticHandleNewFreq:(Float32) freq{
     [instance instanceHandleNewFreq:freq];
 }
-
 @end

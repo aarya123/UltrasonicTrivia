@@ -31,6 +31,7 @@
 		3ECFCF11198C13260084A692 /* ChoiceCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ECFCF10198C13260084A692 /* ChoiceCell.mm */; };
 		3ECFCF14198C15550084A692 /* ChoiceController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ECFCF13198C15550084A692 /* ChoiceController.mm */; };
 		3ECFCF17198C38540084A692 /* Server.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ECFCF16198C38540084A692 /* Server.mm */; };
+		3ECFCF1D198C98C70084A692 /* AppConstants.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3ECFCF1C198C98C70084A692 /* AppConstants.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 		3ECFCF13198C15550084A692 /* ChoiceController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ChoiceController.mm; sourceTree = "<group>"; };
 		3ECFCF15198C38540084A692 /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
 		3ECFCF16198C38540084A692 /* Server.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Server.mm; sourceTree = "<group>"; };
+		3ECFCF1B198C98C70084A692 /* AppConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConstants.h; sourceTree = "<group>"; };
+		3ECFCF1C198C98C70084A692 /* AppConstants.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppConstants.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +168,8 @@
 				3ECFCF13198C15550084A692 /* ChoiceController.mm */,
 				3ECFCF15198C38540084A692 /* Server.h */,
 				3ECFCF16198C38540084A692 /* Server.mm */,
+				3ECFCF1B198C98C70084A692 /* AppConstants.h */,
+				3ECFCF1C198C98C70084A692 /* AppConstants.mm */,
 			);
 			path = DetectingSoundFrequency;
 			sourceTree = "<group>";
@@ -307,6 +312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EC4BE21198B134F0023CB41 /* SignUpController.mm in Sources */,
+				3ECFCF1D198C98C70084A692 /* AppConstants.mm in Sources */,
 				04808C5018BE88E800E685F1 /* FFTHelper.mm in Sources */,
 				3ECFCF11198C13260084A692 /* ChoiceCell.mm in Sources */,
 				04808C3018BE868300E685F1 /* ViewController.mm in Sources */,
