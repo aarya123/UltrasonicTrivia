@@ -11,7 +11,7 @@
 //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"user"];
 //    [[NSUserDefaults standardUserDefaults] synchronize];
     
-    self.window.backgroundColor = AppConstants.whiteBackground;
+    self.window.backgroundColor = AppConstants.greenBackground;
     if([[NSUserDefaults standardUserDefaults] stringForKey:@"user"] != nil){
         ViewController *viewController = [[ViewController alloc] init];
         self.window.rootViewController = viewController;

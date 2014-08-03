@@ -37,12 +37,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"ChoiceCell";
     
-    // Similar to UITableViewCell, but
     ChoiceCell *cell = (ChoiceCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         cell = [[ChoiceCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    // Just want to test, so I hardcode the data
     [cell.btn setTitle:[self getItemAtIndex:indexPath] forState:UIControlStateNormal];
     cell.btn.tag=[indexPath row];
     [cell.btn addTarget:self action:@selector(btnPressed:) forControlEvents:UIControlEventTouchUpInside];

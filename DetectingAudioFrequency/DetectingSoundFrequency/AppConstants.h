@@ -13,4 +13,6 @@
 +(UIColor*) green;
 +(UIColor*) red;
 +(UIColor*) whiteBackground;
++(UIColor*) greenBackground;
++(UIImage *)imageWithColor:(UIColor *)color;
 @end

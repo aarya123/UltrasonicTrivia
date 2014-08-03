@@ -37,4 +37,23 @@
         whiteBackground = [UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f];
     return whiteBackground;
 }
++(UIColor*) greenBackground
+{
+    static UIColor* greenBackground = nil;
+    if (greenBackground == nil)
+        greenBackground = [UIColor colorWithRed:153/255.0f green:204/255.0f blue:51/255.0f alpha:1.0f];
+    return greenBackground;
+}
++ (UIImage *)imageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
 @end

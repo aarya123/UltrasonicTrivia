@@ -11,6 +11,9 @@
 @interface SignUpController ()
 @property (strong,nonatomic) UITextField *userName;
 @property (strong,nonatomic) UIButton *submitBtn;
+@property (strong,nonatomic) UIImageView *huluImage;
+@property (strong,nonatomic) UIImageView *triviaImage;
+@property (nonatomic, assign) id currentResponder;
 @end
 
 @implementation SignUpController
@@ -27,19 +30,43 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resignOnTap:)];
+    [singleTap setNumberOfTapsRequired:1];
+    [singleTap setNumberOfTouchesRequired:1];
+    [self.view addGestureRecognizer:singleTap];
+    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
    
-    self.userName=[[UITextField alloc]initWithFrame:CGRectMake(0, screenRect.size.height/4, screenRect.size.width, 30)];
+    self.userName=[[UITextField alloc]initWithFrame:CGRectMake(screenRect.size.width/2-125, 175, 250, 50)];
     [self.userName setTextAlignment:NSTextAlignmentCenter];
     [self.userName setText:@"anubhaw.arya@hulu.com"];
-    [self.userName addTarget:self action:@selector(textFieldShouldBeginEditing:) forControlEvents:UIControlEventEditingDidBegin];
+    [self.userName setBackground:[AppConstants imageWithColor:[UIColor whiteColor]]];
+    [self.userName.layer setCornerRadius:6.0];
+    [self.userName.layer setBorderWidth:1.0];
+    [self.userName setClipsToBounds:YES];
+    [self.userName.layer setBorderColor:[[UIColor whiteColor]CGColor]];
+    [self.userName addTarget:self action:@selector(textFieldDidBeginEditing:) forControlEvents:UIControlEventEditingDidBegin];
     [self.view addSubview:self.userName];
     
     self.submitBtn=[UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.submitBtn.frame=CGRectMake(screenRect.size.width/4, self.userName.frame.origin.y+self.userName.frame.size.height, screenRect.size.width/2, screenRect.size.height/8);
+    self.submitBtn.frame=CGRectMake(screenRect.size.width/4, 237.5, 175, 35);
     [self.submitBtn setTitle:@"Register" forState:UIControlStateNormal];
     [self.submitBtn addTarget:self action:@selector(btnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.submitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.submitBtn setBackgroundColor:[UIColor clearColor]];
+    [self.submitBtn.layer setCornerRadius:6.0];
+    [self.submitBtn.layer setBorderColor:[[UIColor whiteColor]CGColor]];
+    [self.submitBtn.layer setBorderWidth:2.5];
     [self.view addSubview:self.submitBtn];
+    
+    self.huluImage=[[UIImageView alloc]initWithFrame:CGRectMake(80, 75, 160, 50)];
+    [self.huluImage setImage:[UIImage imageNamed:@"huluImage"]];
+    [self.view addSubview:self.huluImage];
+    
+    self.triviaImage=[[UIImageView alloc]initWithFrame:CGRectMake(177.5, 110, 85, 25)];
+    [self.triviaImage setImage:[UIImage imageNamed:@"triviaImage"]];
+    [self.view addSubview:self.triviaImage];
 }
 
 -(void) btnPressed:(id) sender{
@@ -49,13 +76,11 @@
     [self presentViewController:second animated:YES completion:nil];
 }
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    textField.layer.cornerRadius=8.0f;
-    textField.layer.masksToBounds=YES;
-    textField.layer.borderColor=[[UIColor redColor]CGColor];
-    textField.layer.borderWidth= 1.0f;
-    return YES;
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.currentResponder = textField;
+}
+- (void)resignOnTap:(id)iSender {
+    [self.currentResponder resignFirstResponder];
 }
 - (void)didReceiveMemoryWarning
 {

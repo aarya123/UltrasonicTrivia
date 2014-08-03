@@ -124,15 +124,14 @@ static ViewController *instance;
     self.freqLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0, screenRect.size.width, screenRect.size.height/8)];
     [self.freqLabel setTextAlignment:NSTextAlignmentCenter];
     [self.freqLabel setText:@"No Frequency"];
-    [self.freqLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+    [self.freqLabel setBackgroundColor:[AppConstants whiteBackground]];
     [self.freqLabel setTextColor:AppConstants.blackFont];
     [self.view addSubview:self.freqLabel];
     
     self.questionLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,self.freqLabel.frame.size.height, screenRect.size.width, screenRect.size.height/8)];
     [self.questionLabel setTextAlignment:NSTextAlignmentCenter];
     [self.questionLabel setText:@"No question"];
-    [self.questionLabel setHidden:YES];
-    [self.questionLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+    [self.questionLabel setBackgroundColor:[AppConstants whiteBackground]];
     [self.questionLabel setAdjustsFontSizeToFitWidth:YES];
     [self.questionLabel setTextColor:AppConstants.blackFont];
     [self.view addSubview:self.questionLabel];
@@ -140,14 +139,14 @@ static ViewController *instance;
     self.choiceButtons=[[UITableView alloc]initWithFrame:CGRectMake(0, self.questionLabel.frame.origin.y+self.questionLabel.frame.size.height, screenRect.size.width, screenRect.size.height-screenRect.size.height/4) style:UITableViewStylePlain];
     [self.choiceButtons setAllowsSelection:NO];
     self.choiceController=[[ChoiceController alloc]init:self];
-    [self.choiceButtons setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+    [self.choiceButtons setBackgroundColor:[AppConstants whiteBackground]];
     [self.view addSubview:self.choiceButtons];
     
     self.scoreLabel=[[UILabel alloc]initWithFrame:self.choiceButtons.frame];
     [self.scoreLabel setTextAlignment:NSTextAlignmentCenter];
     [self.scoreLabel setText:@"0"];
     [self.scoreLabel setHidden:YES];
-    [self.scoreLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+    [self.scoreLabel setBackgroundColor:[AppConstants whiteBackground]];
     [self.scoreLabel setTextColor:AppConstants.blackFont];
     [self.view addSubview:self.scoreLabel];
     
@@ -179,14 +178,14 @@ static ViewController *instance;
 }
 -(void) handleQuestion:(NSData*) questionInfo{
     NSError *localError = nil;
-    questionInfo = [@"{\"answer\": 2,\"choices\": [ \"40\",\"41\",\"42\",\"43\"],\"question\": \"What is the answer to the Ultimate Question of Life, the Universe, and Everything?\",\"show\": \"South_Park\"}" dataUsingEncoding:NSUTF8StringEncoding];
+//    questionInfo = [@"{\"answer\": 2,\"choices\": [ \"40\",\"41\",\"42\",\"43\"],\"question\": \"What is the answer to the Ultimate Question of Life, the Universe, and Everything?\",\"show\": \"South_Park\"}" dataUsingEncoding:NSUTF8StringEncoding];
 
     self.currQuestion = [NSJSONSerialization JSONObjectWithData:questionInfo options:NSJSONReadingMutableContainers error:&localError];
     NSLog(@"%@", self.currQuestion);
     if([self.currQuestion objectForKey:@"error"]==nil)
     {
         [self.questionLabel setText:[self.currQuestion valueForKey:@"question"]];
-        [self.questionLabel setBackgroundColor:[UIColor colorWithRed:236/255.0f green:240/255.0f blue:241/255.0f alpha:1.0f]];
+        [self.questionLabel setBackgroundColor:[AppConstants whiteBackground]];
         [self.questionLabel setHidden:NO];
         [self.choiceController setDataSource:self.currQuestion];
         [self.choiceButtons setHidden:NO];
